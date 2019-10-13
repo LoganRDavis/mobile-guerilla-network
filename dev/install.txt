@@ -1,2 +1,5 @@
 https://facebook.github.io/react-native/docs/0.60/getting-started
 follow React Native CLI Quickstart
+
+react-native run-android
+react-native log-android

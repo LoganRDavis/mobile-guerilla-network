@@ -1,11 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
 import React from 'react';
 import {
   SafeAreaView,
@@ -23,6 +15,14 @@ import {
   DebugInstructions,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+
+console.log("Starting app...");
+let BluetoothCP = require("react-native-bluetooth-cross-platform")
+BluetoothCP.advertise("WIFI-BT")
+BluetoothCP.addPeerDetectedListener(function (user) {
+  console.log("Peer Detected!");
+});
+
 
 const App: () => React$Node = () => {
   return (
