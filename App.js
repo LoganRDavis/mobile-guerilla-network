@@ -1,20 +1,19 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
-  ScrollView,
+  Button,
+  FlatList,
   View,
   Text,
+  Image,
+  TextInput,
   StatusBar,
+  Alert,
 } from 'react-native';
+import { statement } from '@babel/template';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+
 
 console.log("Starting app...");
 let BluetoothCP = require("react-native-bluetooth-cross-platform")
@@ -23,92 +22,105 @@ BluetoothCP.addPeerDetectedListener(function (user) {
   console.log("Peer Detected!");
 });
 
+const DATA = [
+  {
+    id: 1,
+    title: 'First message',
+  },
+  {
+    id: 2,
+    title: 'Second message',
+  },
+  {
+    id: 3,
+    title: 'Third message',
+  },
+];
 
-const App: () => React$Node = () => {
+function Item({message}){
   return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
+    <View style={styles.item}>
+      <Text style={styles.title}>
+        {message}
+      </Text>
+    </View>
+  )
+}
+
+
+class App extends Component {
+  state = {
+    text: ''
+  }
+  render(){
+    return (
+        <View style={styles.container}>
+          <View style={styles.containerCenter}>
+            <Image
+              style={styles.image}
+              source={require('./library/components/logo.png')}
+              />
             </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
+          <FlatList
+            data={DATA}
+            renderItem = {({ item }) => <Item message = {item.title} /> }
+            keyExtractor={item => item.id}
+          />
+          <View>
+            <TextInput
+              //id='myTextInput'
+              style={styles.textInputStyle}
+              placeholder="type your message"
+              onChangeText={(text)=> this.setState({text})}
+              value = {this.state.text}
+              //console.log(this.state.text);
+              />
+            <Button
+              style = {styles.bottom}
+              title="Send" 
+              onPress={() => Alert.alert('not yet implemented')}
+              /> 
+            
           </View>
-        </ScrollView>
-      </SafeAreaView>
-    </>
-  );
-};
+        </View>
+    )
+  }
+}
 
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
+  container: {
+    flex: 1,
   },
-  engine: {
-    position: 'absolute',
-    right: 0,
+  containerCenter: {
+    alignItems: 'center',
   },
-  body: {
-    backgroundColor: Colors.white,
+  textInputStyle: {
+    height: 40,   
+    textAlign: 'left', 
+    marginBottom: 10
   },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  image: {
+    alignItems: 'center',
+    alignContent: 'center',
+    marginBottom: 20
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
+  title: {
+    textAlign: 'left',
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
+  fixToText: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
-  highlight: {
-    fontWeight: '700',
+  item: {
+    marginVertical: 2,
+    marginHorizontal: 10,
   },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
-  },
+  bottom: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    marginBottom: 36,
+    alignItems: 'center'
+  }
 });
 
 export default App;
