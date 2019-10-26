@@ -1,43 +1,67 @@
 import React, { Component } from 'react';
 import {
-  SafeAreaView,
   StyleSheet,
   Button,
   FlatList,
   View,
   Text,
   Image,
-  TextInput,
-  StatusBar,
-  Alert,
+  TextInput
 } from 'react-native';
-import { statement } from '@babel/template';
+import DeviceInfo from 'react-native-device-info';
+const uuidv4 = require('uuid/v4');
 
+class GuerillaRadio {
+  app;
+  radioModule;
+  foundPeers;
+  constructor(app) {
+    this.app = app;
+    this.radioModule = require("react-native-bluetooth-cross-platform");
+    this.foundPeers = [];
+  }
 
+  broadcast() {
+    this.radioModule.advertise("WIFI-BT");
+  }
 
-console.log("Starting app...");
-let BluetoothCP = require("react-native-bluetooth-cross-platform")
-BluetoothCP.advertise("WIFI-BT")
-BluetoothCP.addPeerDetectedListener(function (user) {
-  console.log("Peer Detected!");
-});
+  listenForPeers() {
+    self = this;
+    this.radioModule.addPeerDetectedListener(function (peer) {
+      console.log("Found peer!");
+      self.foundPeers.push(peer);
+    });
+  }
 
-const DATA = [
-  {
-    id: 1,
-    title: 'First message',
-  },
-  {
-    id: 2,
-    title: 'Second message',
-  },
-  {
-    id: 3,
-    title: 'Third message',
-  },
-];
+  listenForMessage(receivedMessages) {
+    self = this;
+    this.radioModule.addReceivedMessageListener(function (peerMessage) {
+      console.log("Received Message!");
+      let message = JSON.parse(peerMessage.message);
+      message.userId = peerMessage.id;
+      for (let i = 0; i < receivedMessages.length; i++) {
+        if (receivedMessages[i].id === message.id) {
+          return;
+        }
+      }
+      receivedMessages.push(message);
+      self.app.setState({
+        refresh: !self.app.state.refresh
+      });
+    });
+  }
 
-function Item({message}){
+  sendMessage(messageToSend) {
+    if (!messageToSend || messageToSend.length === 0) {
+      return alert("Please type in a message.");
+    }
+    let message = JSON.stringify({ text: messageToSend, id: uuidv4().toString() });
+    for (let i = 0; i < this.foundPeers.length; i++)
+      this.radioModule.sendMessage(message, this.foundPeers[i].id);
+  }
+}
+
+function Item({ message }) {
   return (
     <View style={styles.item}>
       <Text style={styles.title}>
@@ -47,42 +71,52 @@ function Item({message}){
   )
 }
 
-
 class App extends Component {
-  state = {
-    text: ''
+  state = {};
+  guerillaRadio;
+  constructor(params) {
+    super(params);
+    this.state.messageToSend = null;
+    this.state.receivedMessages = [{ text: "MESSAGES:", id: '0' }];
+    this.state.refresh = false;
+    this.guerillaRadio = new GuerillaRadio(this);
+    this.guerillaRadio.broadcast();
+    this.guerillaRadio.listenForPeers();
+    this.guerillaRadio.listenForMessage(this.state.receivedMessages);
   }
-  render(){
+
+  render() {
     return (
-        <View style={styles.container}>
-          <View style={styles.containerCenter}>
-            <Image
-              style={styles.image}
-              source={require('./library/components/logo.png')}
-              />
-            </View>
-          <FlatList
-            data={DATA}
-            renderItem = {({ item }) => <Item message = {item.title} /> }
-            keyExtractor={item => item.id}
+      <View style={styles.container}>
+        <View style={styles.containerCenter}>
+          <Image
+            style={styles.image}
+            source={require('./library/components/logo.png')}
           />
-          <View>
-            <TextInput
-              //id='myTextInput'
-              style={styles.textInputStyle}
-              placeholder="type your message"
-              onChangeText={(text)=> this.setState({text})}
-              value = {this.state.text}
-              //console.log(this.state.text);
-              />
-            <Button
-              style = {styles.bottom}
-              title="Send" 
-              onPress={() => Alert.alert('not yet implemented')}
-              /> 
-            
-          </View>
         </View>
+        <FlatList
+          data={this.state.receivedMessages}
+          renderItem={({ item }) => <Item message={item.text} />}
+          keyExtractor={item => item.id}
+          extraData={this.state.refresh}
+        />
+        <View>
+          <TextInput
+            style={styles.textInputStyle}
+            placeholder="type your message"
+            onChangeText={(messageToSend) => this.setState({ messageToSend })}
+            value={this.state.messageToSend}
+          />
+          <Button
+            style={styles.bottom}
+            title="Send"
+            onPress={() => {
+              this.guerillaRadio.sendMessage(this.state.messageToSend);
+            }}
+          />
+
+        </View>
+      </View>
     )
   }
 }
@@ -95,8 +129,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textInputStyle: {
-    height: 40,   
-    textAlign: 'left', 
+    height: 40,
+    textAlign: 'left',
     marginBottom: 10
   },
   image: {
