@@ -18,6 +18,10 @@ export default class GuerillaRadio {
         this.radioModule.advertise("WIFI-BT");
     }
 
+    getPeersLength() {
+        return this.foundPeers.length;
+    }
+
     listenForPeers() {
         self = this;
         console.log("Listening...");
@@ -25,6 +29,9 @@ export default class GuerillaRadio {
             console.log("Found peer!");
             console.log(peer);
             self.foundPeers.push(peer);
+            self.app.setState({
+                refresh: !self.app.state.refresh
+            });
         });
     }
 
@@ -50,7 +57,7 @@ export default class GuerillaRadio {
         });
     }
 
-    sendMessage(messageToSend,receivedMessages) {
+    sendMessage(messageToSend, receivedMessages) {
         if (!messageToSend || messageToSend.length === 0) {
             return alert("Please type in a message.");
         }
@@ -58,12 +65,12 @@ export default class GuerillaRadio {
         for (let i = 0; i < this.foundPeers.length; i++)
             this.radioModule.sendMessage(message, this.foundPeers[i].id);
 
-            receivedMessages.unshift({
-              text: 'Me: '+ messageToSend,
-              id: uuidv4().toString()
-            });
-            self.app.setState({
-              refresh: !self.app.state.refresh
-            })
+        receivedMessages.unshift({
+            text: 'Me: ' + messageToSend,
+            id: uuidv4().toString()
+        });
+        self.app.setState({
+            refresh: !self.app.state.refresh
+        })
     }
 }
