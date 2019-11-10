@@ -28,7 +28,7 @@ class App extends Component {
   constructor(params) {
     super(params);
     this.state.messageToSend = null;
-    this.state.receivedMessages = [{ text: "MESSAGES:", id: '0' }];
+    this.state.receivedMessages = [{ text: "", id: '0' }];
     this.state.refresh = false;
     this.guerillaRadio = new GuerillaRadio(this);
     this.guerillaRadio.broadcast();
@@ -45,6 +45,9 @@ class App extends Component {
             source={require('./library/components/logo.png')}
           />
         </View>
+        <Text>
+          Messages:
+        </Text>
         <FlatList
           data={this.state.receivedMessages}
           renderItem={({ item }) => <Item message={item.text} />}
@@ -62,8 +65,10 @@ class App extends Component {
             style={styles.bottom}
             title="Send"
             onPress={() => {
-              this.guerillaRadio.sendMessage(this.state.messageToSend);
-            }}
+              this.guerillaRadio.sendMessage(this.state.messageToSend,this.state.receivedMessages);
+            }
+          }
+            
           />
 
         </View>
