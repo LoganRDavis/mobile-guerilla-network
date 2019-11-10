@@ -9,8 +9,8 @@ import {
   Image,
   TextInput
 } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
 const uuidv4 = require('uuid/v4');
+
 
 function Item({ message }) {
   return (
@@ -28,7 +28,7 @@ class App extends Component {
   constructor(params) {
     super(params);
     this.state.messageToSend = null;
-    this.state.receivedMessages = [{ text: "MESSAGES:", id: '0' }];
+    this.state.receivedMessages = [];
     this.state.refresh = false;
     this.guerillaRadio = new GuerillaRadio(this);
     this.guerillaRadio.broadcast();
