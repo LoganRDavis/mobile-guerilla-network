@@ -44,9 +44,14 @@ class App extends Component {
             style={styles.image}
             source={require('./library/components/logo.png')}
           />
+          <Text>
+          Connected Peers: {this.guerillaRadio.getPeerCount}
+        </Text>
         </View>
+        
+          
         <Text>
-          Messages:
+          Messages: 
         </Text>
         <FlatList
           data={this.state.receivedMessages}
