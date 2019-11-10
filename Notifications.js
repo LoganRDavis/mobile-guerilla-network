@@ -14,10 +14,7 @@ export default class Notifications {
             },
 
             onNotification: function (notification) {
-                console.log("NOTIFICATION:", notification);
-
-
-                notification.finish(PushNotificationIOS.FetchResult.NoData);
+                console.log(notification);
             },
 
             senderID: "YOUR GCM (OR FCM) SENDER ID",
