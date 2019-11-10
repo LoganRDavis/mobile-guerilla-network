@@ -7,7 +7,8 @@ import {
   View,
   Text,
   Image,
-  TextInput
+  TextInput,
+  Keyboard
 } from 'react-native';
 const uuidv4 = require('uuid/v4');
 
@@ -45,7 +46,7 @@ class App extends Component {
             source={require('./library/components/logo.png')}
           />
           <Text>
-          Connected Peers: {this.guerillaRadio.getPeerCount}
+          Connected Peers: {this.guerillaRadio.getPeersLength()}
         </Text>
         </View>
         
@@ -71,6 +72,8 @@ class App extends Component {
             title="Send"
             onPress={() => {
               this.guerillaRadio.sendMessage(this.state.messageToSend,this.state.receivedMessages);
+              this.state.messageToSend = "";
+              Keyboard.dismiss();
             }
           }
             

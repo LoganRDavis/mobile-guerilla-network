@@ -18,6 +18,10 @@ export default class GuerillaRadio {
         this.radioModule.advertise("WIFI-BT");
     }
 
+    getPeersLength(){
+      return this.foundPeers.length;
+    }
+
     listenForPeers() {
         self = this;
         console.log("Listening...");
@@ -25,6 +29,9 @@ export default class GuerillaRadio {
             console.log("Found peer!");
             console.log(peer);
             self.foundPeers.push(peer);
+            self.app.setState({
+              refresh: !self.app.state.refresh
+            });
         });
     }
 
