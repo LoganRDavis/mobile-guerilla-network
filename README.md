@@ -1,4 +1,5 @@
 Logan Davis, Joseph Cantrell
+
 Overview—This project was designed to solve the
 problem of communication when cell towers and Wi-Fi
 routers are unavailable. We overcame this issue by
@@ -8,6 +9,7 @@ Bluetooth transmitter. We were able to successfully build a
 proof of concept that allows communications between 2 or
 more android devices without the use of cellular or Wi-Fi
 services.
+
 I. INTRODUCTION
 Our team has decided to create a simple
 messaging app that will send and receive text messages
@@ -24,6 +26,7 @@ react native, it will be a learning process. This
 application will be designed and programmed for the
 Android platform. If all goes well, we may consider
 adding cross platform support to iOS devices.
+
 II. RELATED WORK
 There are numerous apps that attempt the same
 goal of wireless communication to people within close
@@ -53,6 +56,7 @@ sends talks as long as the app is open without any user
 connection acceptance.
  Overall, we believe our app satisfies a unique
 niche that as yet to be fully explored in the app store.
+
 III. APPLICATION DESIGN
 Our application is designed to be simple and
 accomplish its purpose quickly and efficiently. As soon
@@ -80,6 +84,7 @@ messages list.
  All messages are saved locally on the device so
 that when the app is launched, the user will see all
 previously sent and received messages.
+
 IV. DEVELOPMENT CYCLE
 The first steps in developing our app involved
 getting a base react native application working. Once we
@@ -112,6 +117,7 @@ Once we were successful in in getting messaging to
 work, it was just a matter of adding on the additional
 features such as notifications, peer counts, message
 saving, etc.
+
 V. RESULTS
 The overall results of the project were a success.
 Despite the app not being production ready, which you
@@ -138,6 +144,7 @@ Given these limitations, this application is hardly
 a universal solution in its current state yet serves as a
 great proof of concept as to what could be developed
 with the technology used for emergency situations.
+
 VI. FUTURE WORK
 Given the time to further work on and develop
 this project, there are numerous things we would love to
