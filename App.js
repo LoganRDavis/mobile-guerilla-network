@@ -31,6 +31,7 @@ class App extends Component {
     this.state.messageToSend = null;
     this.state.receivedMessages = [];
     this.state.refresh = false;
+    this.state.username = "anonymous";
     this.guerillaRadio = new GuerillaRadio(this);
     this.guerillaRadio.broadcast();
     this.guerillaRadio.listenForPeers();
@@ -46,13 +47,32 @@ class App extends Component {
             source={require('./library/components/logo.png')}
           />
           <Text>
-          Connected Peers: {this.guerillaRadio.getPeersLength()}
-        </Text>
+            Username:
+          </Text>
+          <TextInput
+            style={styles.textInputStyle}
+            placeholder="enter your username"
+            onChangeText={(username) => this.setState({ username })}
+            value={this.state.username}
+          />
+          <Text>
+            Connected Peers: {this.guerillaRadio.getPeersLength()}
+          </Text>
+          <Button
+            style={styles.bottom}
+            title="Clear Messages"
+            onPress={() => {
+              this.setState({
+                receivedMessages: []
+              });
+              this.guerillaRadio.saveMessages([]);
+              Keyboard.dismiss();
+            }
+            }
+          />
         </View>
-        
-          
         <Text>
-          Messages: 
+          Messages:
         </Text>
         <FlatList
           data={this.state.receivedMessages}
@@ -71,14 +91,16 @@ class App extends Component {
             style={styles.bottom}
             title="Send"
             onPress={() => {
-              this.guerillaRadio.sendMessage(this.state.messageToSend,this.state.receivedMessages);
+              this.guerillaRadio.sendMessage(
+                this.state.messageToSend,
+                this.state.receivedMessages,
+                this.state.username
+              );
               this.state.messageToSend = "";
               Keyboard.dismiss();
             }
-          }
-            
+            }
           />
-
         </View>
       </View>
     )
@@ -94,7 +116,7 @@ const styles = StyleSheet.create({
   },
   textInputStyle: {
     height: 40,
-    textAlign: 'left',
+    textAlign: 'center',
     marginBottom: 10
   },
   image: {
